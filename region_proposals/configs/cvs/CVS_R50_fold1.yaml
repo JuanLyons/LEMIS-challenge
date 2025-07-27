@@ -1,0 +1,12 @@
+_BASE_: Base-CVS-InstanceSegmentation.yaml
+DATASETS:
+  TRAIN: ("cvs-challenge_train_fold1",)
+  TEST: ("cvs-challenge_test_fold1",)
+SOLVER:
+  IMS_PER_BATCH: 36
+  BASE_LR: 0.0001
+  STEPS: (486, 856)
+  MAX_ITER: 973
+  CHECKPOINT_PERIOD: 10
+TEST:
+  EVAL_PERIOD: 10

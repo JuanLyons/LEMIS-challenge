@@ -1,0 +1,9 @@
+_BASE_: Base-CVS-InstanceSegmentation.yaml
+DATASETS:
+  TRAIN: ("cvs_train",)
+  TEST: ("cvs_test",)
+SOLVER:
+  IMS_PER_BATCH: 24
+  BASE_LR: 0.0001
+  STEPS: (4842, 8607)
+  MAX_ITER: 9683

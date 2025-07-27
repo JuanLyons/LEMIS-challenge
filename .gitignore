@@ -1,0 +1,15 @@
+outputs
+data_*/
+data/LED
+data/GraSP
+data/EndoVis-2017
+data/EndoVis-2018
+data/SAR-RARP50
+region_proposals/outputs
+region_proposals/data*
+lemis/metrics_outputs
+lemis/visualization
+*/__pycache__
+*.pyth
+*.pth
+*.pkl

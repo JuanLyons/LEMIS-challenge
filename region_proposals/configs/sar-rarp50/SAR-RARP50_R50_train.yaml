@@ -1,0 +1,9 @@
+_BASE_: Base-SAR-RARP50-InstanceSegmentation.yaml
+DATASETS:
+  TRAIN: ("sar-rarp50_train",)
+  TEST: ("sar-rarp50_test",)
+SOLVER:
+  IMS_PER_BATCH: 24
+  BASE_LR: 0.0001
+  STEPS: (4842, 8607)
+  MAX_ITER: 9683
