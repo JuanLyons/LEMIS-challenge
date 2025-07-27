@@ -2,14 +2,14 @@ python train_net.py --num-gpus 3 \
 --config-file configs/cvs/CVS_SwinL_fold1.yaml \
 DATASETS.DATA_PATH /media/SSD1/scanar/GraSP/TAPIS/region_proposals/data \
 OUTPUT_DIR outputs/challenge/CVS_SwinL_fold1 \
-MODEL.WEIGHTS model_final_SwinL.pkl \
+MODEL.WEIGHTS /home/jclyons/endovis/miccai2025/LEMIS/region_proposals/model_final_SwinL.pkl \
 MODEL.TEXT None
 
 python train_net.py --num-gpus 3 \
 --config-file configs/cvs/CVS_SwinL_fold2.yaml \
 DATASETS.DATA_PATH /media/SSD1/scanar/GraSP/TAPIS/region_proposals/data \
 OUTPUT_DIR outputs/challenge/CVS_SwinL_fold2 \
-MODEL.WEIGHTS model_final_SwinL.pkl \
+MODEL.WEIGHTS /home/jclyons/endovis/miccai2025/LEMIS/region_proposals/model_final_SwinL.pkl \
 MODEL.TEXT None
 
 python train_net.py --num-gpus 3 \

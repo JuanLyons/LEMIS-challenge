@@ -32,6 +32,8 @@ from detectron2.evaluation import (
     SemSegEvaluator,
     verify_results,
 )
+from detectron2.engine import hooks
+from detectron2.engine.hooks import BestCheckpointer
 
 # Region Features Saving
 from coco_evaluation_features import COCOEvaluator
@@ -196,6 +198,24 @@ class Trainer(DefaultTrainer):
     """
     Extension of the Trainer class adapted to MaskFormer.
     """
+
+    def build_hooks(self):
+        hooks_list = super().build_hooks()
+
+        for h in hooks_list:
+            if isinstance(h, hooks.PeriodicCheckpointer):
+                hooks_list.remove(h)
+                break
+
+        hooks_list.append(
+            BestCheckpointer(
+                self.cfg.TEST.EVAL_PERIOD,
+                self.checkpointer,
+                val_metric="segm/AP50",
+            )
+        )
+
+        return hooks_list
 
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
