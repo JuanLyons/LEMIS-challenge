@@ -17,79 +17,46 @@ import pycocotools.mask as m
 import warnings
 
 
-def hex_to_rgb(hex):
-    return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
-
-
 COLOR_HEX_CODE = [
     {
         "id": 1,
-        "name": "Bipolar Forceps",
-        "supercategory": "Instrument",
-        "color": "#23728c",
+        "name": "cystic_plate",
+        "supercategory": "anatomy",
+        "color": [248, 231, 28],
     },
     {
         "id": 2,
-        "name": "Prograsp Forceps",
-        "supercategory": "Instrument",
-        "color": "#18ae88",
+        "name": "calot_triangle",
+        "supercategory": "anatomy",
+        "color": [74, 144, 226],
     },
     {
         "id": 3,
-        "name": "Large Needle Driver",
-        "supercategory": "Instrument",
-        "color": "#59e941",
+        "name": "cystic_artery",
+        "supercategory": "anatomy",
+        "color": [218, 13, 15],
     },
     {
         "id": 4,
-        "name": "Vessel Sealer",
-        "supercategory": "Instrument",
-        "color": "#0281d0",
+        "name": "cystic_duct",
+        "supercategory": "anatomy",
+        "color": [65, 117, 6],
     },
     {
         "id": 5,
-        "name": "Grasping Retractor",
-        "supercategory": "Instrument",
-        "color": "#37b6ff",
+        "name": "gallbladder",
+        "supercategory": "anatomy",
+        "color": [126, 211, 33],
     },
     {
         "id": 6,
-        "name": "Monopolar Curved Scissors",
-        "supercategory": "Instrument",
-        "color": "#8388f4",
-    },
-    {
-        "id": 7,
-        "name": "Ultrasound Probe",
-        "supercategory": "Instrument",
-        "color": "#bda7d9",
-    },
-    {
-        "id": 8,
-        "name": "Suction Instrument",
-        "supercategory": "Instrument",
-        "color": "#d8355f",
-    },
-    {
-        "id": 9,
-        "name": "Clip Applier",
-        "supercategory": "Instrument",
-        "color": "#e69c3c",
-    },
-    {
-        "id": 10,
-        "name": "Laparoscopic Instrument",
-        "supercategory": "Instrument",
-        "color": "#e9c631",
+        "name": "tool",
+        "supercategory": "tool",
+        "color": [245, 166, 35],
     },
 ]
 
-COLOR_HEX_CODE = {item["id"]: item["color"][1:] for item in COLOR_HEX_CODE}
-
-COLOR = {
-    key: np.array(hex_to_rgb(value), dtype=np.uint8)
-    for key, value in COLOR_HEX_CODE.items()
-}
+COLOR = {item["id"]: item["color"] for item in COLOR_HEX_CODE}
 
 
 def parse_args():
@@ -114,9 +81,7 @@ def parse_args():
     )
     parser.add_argument(
         "--dataset",
-        default="coco_endovis_2017",
         type=str,
-        required=True,
         choices=["coco_endovis_2017", "coco_endovis_2018", "GraSP", "SAR-RARP50"],
         help="dataset to visualize if the coco annotations are of the complete dataset",
     )
@@ -239,7 +204,9 @@ def clean_preds(preds):
 
 def organize_data(coco_ann):
     id2name = {img["id"]: img["file_name"] for img in coco_ann["images"]}
-    id2dataset = {img["id"]: img["dataset"] for img in coco_ann["images"]}
+    id2dataset = {
+        img["id"]: img.get("dataset", "dataset") for img in coco_ann["images"]
+    }
     id2width = {img["id"]: img["width"] for img in coco_ann["images"]}
     id2height = {img["id"]: img["height"] for img in coco_ann["images"]}
 
@@ -807,18 +774,19 @@ def main():
     # Organize data
     coco_ann = organize_data(coco_ann)
 
-    cen = False
-    for ann in coco_ann.values():
-        cen = args.dataset == ann[0]["dataset"]
-        if cen:
-            break
-    assert cen, "Dataset not found in coco annotations"
+    if args.dataset is not None:
+        cen = False
+        for ann in coco_ann.values():
+            cen = args.dataset == ann[0]["dataset"]
+            if cen:
+                break
+        assert cen, "Dataset not found in coco annotations"
 
     if args.video is not None:
         coco_ann, preds_list = filter_dataset_video(
             coco_ann, preds_list, args.dataset, args.video
         )
-    else:
+    elif args.dataset is not None:
         coco_ann, preds_list = filter_dataset(coco_ann, preds_list, args.dataset)
 
     # Visualize
