@@ -5,10 +5,13 @@ data/GraSP
 data/EndoVis-2017
 data/EndoVis-2018
 data/SAR-RARP50
+data/sages*
+lemis/without_class_mask2former
+lemis/without_class_maskdino
 region_proposals/outputs
 region_proposals/data*
 lemis/metrics_outputs
-lemis/visualization
+lemis/visualization*
 */__pycache__
 *.pyth
 *.pth

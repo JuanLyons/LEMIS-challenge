@@ -443,7 +443,7 @@ def filter_preds(preds_list, method, parameters):
         return preds_list
 
 
-def format_instances(instances, width, height, segmentation=False):
+def format_instances(instances, width, height, segmentation=False, num_classes=None):
     formated_instances = []
     for instance in instances:
         bbox = instance["bbox"]
@@ -453,6 +453,26 @@ def format_instances(instances, width, height, segmentation=False):
         x2 /= width
         y1 /= height
         y2 /= height
+
+        if not "score_dist" in instance.keys():
+            if "category_id" in instance.keys():
+                if num_classes != None and num_classes > 1:
+                    remaining = (1 - instance["score"]) / (num_classes - 1)
+                    vector = [remaining] * num_classes
+
+                    # asignar el score a su categoría
+                    vector[instance["category_id"]] = instance["score"]
+                    instance["score_dist"] = vector
+                    del vector
+                    del remaining
+                elif num_classes != None and num_classes == 1:
+                    instance["score_dist"] = [1.0]
+                else:
+                    raise ValueError("num_classes should be different of None.")
+            else:
+                raise KeyError(
+                    "If score dist is no available, the dict should have category_id."
+                )
 
         pred_tools = instance["score_dist"]
         this_instance = {"bbox": [x1, y1, x2, y2], "instruments_score_dist": pred_tools}
@@ -465,22 +485,40 @@ def format_instances(instances, width, height, segmentation=False):
     return formated_instances
 
 
+def get_num_classes(path):
+    with open(path, "r") as f:
+        data = json.load(f)
+
+    return len(data["categories"])
+
+
 def read_detectron2_output(
     coco_anns_path, preds_path, selection, selection_params, segmentation=False
 ):
     data_dict = load_json(coco_anns_path)
     data_dict, id2name = gather_info(data_dict)
 
+    num_classes = get_num_classes(coco_anns_path)
+
     if "pth" in preds_path:
         preds = torch.load(preds_path)
         for pred in tqdm(preds, desc="Filtering preds"):
             instances = filter_preds(pred["instances"], selection, selection_params)
-            instances = format_instances(
-                instances=instances,
-                width=id2name[pred["image_id"]]["width"],
-                height=id2name[pred["image_id"]]["height"],
-                segmentation=segmentation,
-            )
+            if all(("score_dist" in instance.keys()) for instance in instances):
+                instances = format_instances(
+                    instances=instances,
+                    width=id2name[image_id]["width"],
+                    height=id2name[image_id]["height"],
+                    segmentation=segmentation,
+                )
+            else:
+                instances = format_instances(
+                    instances=instances,
+                    width=id2name[image_id]["width"],
+                    height=id2name[image_id]["height"],
+                    segmentation=segmentation,
+                    num_classes=num_classes,
+                )
             data_dict[id2name[pred["image_id"]]["file_name"]]["instances"] = instances
 
     elif "json" in preds_path:
@@ -499,12 +537,21 @@ def read_detectron2_output(
                 instances = filter_preds(
                     data_dict[name]["instances"], selection, selection_params
                 )
-                instances = format_instances(
-                    instances=instances,
-                    width=id2name[image_id]["width"],
-                    height=id2name[image_id]["height"],
-                    segmentation=segmentation,
-                )
+                if all(("score_dist" in instance.keys()) for instance in instances):
+                    instances = format_instances(
+                        instances=instances,
+                        width=id2name[image_id]["width"],
+                        height=id2name[image_id]["height"],
+                        segmentation=segmentation,
+                    )
+                else:
+                    instances = format_instances(
+                        instances=instances,
+                        width=id2name[image_id]["width"],
+                        height=id2name[image_id]["height"],
+                        segmentation=segmentation,
+                        num_classes=num_classes,
+                    )
                 data_dict[name]["instances"] = instances
             else:
                 data_dict[name]["instances"] = []

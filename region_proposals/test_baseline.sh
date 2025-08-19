@@ -1,20 +1,27 @@
-python train_net.py --num-gpus 6 --eval-only \
---config-file configs/endovis_2017/endovis_2017_SwinL_train.yaml \
-DATASETS.DATA_PATH data_1 \
-OUTPUT_DIR outputs/LEMIS_endovis_2017_weights_subset_sar_rarp50_2/model_0000111 \
-MODEL.WEIGHTS outputs/LEMIS_endovis_2017_weights_subset_sar_rarp50_2/model_0000111.pth \
-MODEL.TEXT Dataset_Embeddings
+python /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/train_net.py --num-gpus 3 --eval-only \
+--config-file /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/configs/cvs_cutted/CVS_SwinL_fold2.yaml \
+DATASETS.DATA_PATH /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/data/sages_cutmargins \
+OUTPUT_DIR outputs/features_fold1_train \
+MODEL.WEIGHTS /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/outputs/challenge/CVS_SwinL_cutted_from_end2023_cutted_fold1/model_best.pth \
+MODEL.TEXT None
 
-python train_net.py --num-gpus 6 --eval-only \
---config-file configs/endovis_2018/endovis_2018_SwinL.yaml \
-DATASETS.DATA_PATH data_1 \
-OUTPUT_DIR outputs/LEMIS_endovis_2018_weights_subset_sar_rarp50_2/model_0000339 \
-MODEL.WEIGHTS outputs/LEMIS_endovis_2018_weights_subset_sar_rarp50_2/model_0000339.pth \
-MODEL.TEXT Dataset_Embeddings
+python /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/train_net.py --num-gpus 3 --eval-only \
+--config-file /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/configs/cvs_cutted/CVS_SwinL_fold1.yaml \
+DATASETS.DATA_PATH /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/data/sages_cutmargins \
+OUTPUT_DIR outputs/features_fold2_train \
+MODEL.WEIGHTS /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/outputs/challenge/CVS_SwinL_cutted_from_end2023_cutted_fold2/model_best.pth \
+MODEL.TEXT None
 
-python train_net.py --num-gpus 6 --eval-only \
---config-file configs/grasp/GraSP_SwinL_train.yaml \
-DATASETS.DATA_PATH data_1 \
-OUTPUT_DIR outputs/LEMIS_grasp_weights_w_o_sar_rarp50/model_0001313 \
-MODEL.WEIGHTS outputs/LEMIS_grasp_weights_w_o_sar_rarp50/model_0001313.pth \
-MODEL.TEXT Dataset_Embeddings
+python /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/train_net.py --num-gpus 3 --eval-only \
+--config-file /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/configs/cvs_cutted/CVS_SwinL_fold1.yaml \
+DATASETS.DATA_PATH /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/data/sages_cutmargins \
+OUTPUT_DIR outputs/features_fold1_test \
+MODEL.WEIGHTS /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/outputs/challenge/CVS_SwinL_cutted_from_end2023_cutted_fold1/model_best.pth \
+MODEL.TEXT None
+
+python /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/train_net.py --num-gpus 3 --eval-only \
+--config-file /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/configs/cvs_cutted/CVS_SwinL_fold2.yaml \
+DATASETS.DATA_PATH /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/data/sages_cutmargins \
+OUTPUT_DIR outputs/features_fold2_test \
+MODEL.WEIGHTS /media/SSD1/scanar/endovis/LEMIS-challenge/region_proposals/outputs/challenge/CVS_SwinL_cutted_from_end2023_cutted_fold2/model_best.pth \
+MODEL.TEXT None
