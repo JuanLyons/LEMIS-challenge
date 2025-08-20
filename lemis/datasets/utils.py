@@ -87,7 +87,7 @@ def pack_pathway_output(cfg, frames):
     """
     if cfg.DATA.REVERSE_INPUT_CHANNEL:
         frames = frames[[2, 1, 0], :, :, :]
-    if cfg.MODEL.ARCH in cfg.MODEL.SINGLE_PATHWAY_ARCH:
+    if cfg.MODEL.ARCH in cfg.MODEL.SINGLE_PATHWAY_ARCH or cfg.MODEL.ARCH == "swinv2":
         frame_list = [frames]
     elif cfg.MODEL.ARCH in cfg.MODEL.MULTI_PATHWAY_ARCH:
         fast_pathway = frames
@@ -101,6 +101,7 @@ def pack_pathway_output(cfg, frames):
         )
         frame_list = [slow_pathway, fast_pathway]
     else:
+        breakpoint()
         raise NotImplementedError(
             "Model arch {} is not in {}".format(
                 cfg.MODEL.ARCH,

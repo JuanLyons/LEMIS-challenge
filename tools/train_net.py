@@ -110,13 +110,23 @@ def train_epoch(
             boxes_mask = data["boxes_mask"] if cfg.REGIONS.ENABLE else None
             boxes = data["boxes"] if cfg.REGIONS.ENABLE else None
             images = data["images"] if cfg.FEATURES.USE_RPN else None
-            preds = model(
-                inputs,
-                bboxes=boxes,
-                features=rpn_ftrs,
-                boxes_mask=boxes_mask,
-                images=images,
-            )
+            if cfg.MODEL.MODEL_NAME != "SwinV2":
+                preds = model(
+                    inputs,
+                    bboxes=boxes,
+                    features=rpn_ftrs,
+                    boxes_mask=boxes_mask,
+                    images=images,
+                )
+            else:
+                preds = model(
+                    inputs,
+                    bboxes=boxes,
+                    features=rpn_ftrs,
+                    boxes_mask=boxes_mask,
+                    images=images,
+                    image_names=image_names,
+                )
 
             # Explicitly declare reduction to mean and compute the loss for each task.
             loss = []
@@ -228,14 +238,23 @@ def eval_epoch(val_loader, model, val_meter, cur_epoch, cfg):
         ) == len(image_names) == len(
             boxes
         ), f"Inconsistent lenghts {len(rpn_ftrs)} & {len(image_names)} & {len(boxes)}"
-
-        preds = model(
-            inputs,
-            bboxes=boxes,
-            features=rpn_ftrs,
-            boxes_mask=boxes_mask,
-            images=images,
-        )
+        if cfg.MODEL.MODEL_NAME != "SwinV2":
+            preds = model(
+                inputs,
+                bboxes=boxes,
+                features=rpn_ftrs,
+                boxes_mask=boxes_mask,
+                images=images,
+            )
+        else:
+            preds = model(
+                inputs,
+                bboxes=boxes,
+                features=rpn_ftrs,
+                boxes_mask=boxes_mask,
+                images=images,
+                image_names=image_names,
+            )
         if cfg.NUM_GPUS:
             preds = {task: preds[task].cpu() for task in preds}
             ori_boxes = ori_boxes.cpu() if cfg.REGIONS.ENABLE else None

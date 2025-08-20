@@ -1,9 +1,9 @@
 # Experiment setup
 TRAIN_FOLD="train" # or fold1, fold2
 TEST_FOLD="test" # or fold1, fold2
-EXP_PREFIX="sages_fold1_10" # costumize
+EXP_PREFIX="sages_fold1_11" # costumize
 TASK="INSTRUMENTS"
-ARCH="TAPIS"
+ARCH="SwinV2"
 
 #-------------------------
 DATASET="SAGES"

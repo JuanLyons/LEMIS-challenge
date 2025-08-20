@@ -1,9 +1,9 @@
 # Experiment setup
 TRAIN_FOLD="train" # or fold1, fold2
 TEST_FOLD="test" # or fold1, fold2
-EXP_PREFIX="sages_fold1_10" # costumize
+EXP_PREFIX="sages_fold2_11" # costumize
 TASK="INSTRUMENTS"
-ARCH="TAPIS"
+ARCH="SwinV2"
 
 #-------------------------
 DATASET="SAGES"
@@ -12,7 +12,7 @@ CONFIG_PATH="configs/"$DATASET"/"$ARCH"_"$TASK".yaml"
 OUTPUT_DIR="./outputs/"$DATASET"/"$EXPERIMENT_NAME
 DATA="data"
 
-DATASET="sages_fold1"
+DATASET="sages_fold2"
 # Change this variables if data is not located in ./data
 FRAME_DIR="./"$DATA"/"$DATASET"/frames"
 FRAME_LIST="./"$DATA"/"$DATASET"/frame_lists"
